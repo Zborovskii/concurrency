@@ -1,32 +1,23 @@
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
 
-    //    Задание 2. Deadlock
-    //    Реализовать ситуацию взаимной блокировки. Как предотвратить такую блокировку?
-
     public static void main(String[] args) throws InterruptedException {
+        Random random = new Random();
+        Account account1 = new Account(1000);
+        Account account2 = new Account(1000);
 
-//        Runner runner = new Runner(); //здесь потоки ждут бруг друга бесконечно
+        AccountThread accountThread1 = new AccountThread(account1, account2, random.nextInt(10));
+        AccountThread accountThread2 = new AccountThread(account2, account1, random.nextInt(10));
 
-        RunnerNew runner = new RunnerNew(); //здесь потоки сортируются и не ждут
+        Thread firstThread = new Thread(accountThread1);
+        Thread secondThread = new Thread(accountThread2);
 
-        Thread thread1 = new Thread(() -> {
-            runner.thirstThread();
-        });
+        firstThread.start();
+        secondThread.start();
 
-        Thread thread2 = new Thread(() -> {
-            runner.secondThread();
-        });
+        firstThread.join();
+        secondThread.join();
 
-        thread1.start();
-        thread2.start();
-
-        thread1.join();
-        thread2.join();
-
-        runner.finished();
     }
 }
