@@ -1,37 +1,27 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
-
 public class Leg implements Runnable {
 
     //Необходимо научить ноги ходить, то есть сделать так, чтобы в консоли left и right выводились по очереди
 
     private final String name;
+    private final Object someObject;
 
-    public Leg(String name) {
+    public Leg(String name, Object someObject) {
         this.name = name;
+        this.someObject = someObject;
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        synchronized (someObject) {
+            while (true) {
+                try {
+                    someObject.notify();
+                    System.out.println(name);
+                    someObject.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            System.out.println(name);
         }
     }
-
-    public static void main(String[] args) {
-
-        CompletableFuture.allOf(
-            CompletableFuture.runAsync(new Leg("left")),
-            CompletableFuture.runAsync(new Leg("right"))
-        ).join();
-
-    }
-
-
 }
