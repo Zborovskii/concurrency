@@ -18,21 +18,19 @@ public class LegNew implements Runnable {
     @Override
     public void run() {
 
+        lock.lock();
+
         try {
             while (true) {
-                lock.lock();
-
                 condition.signal();
                 System.out.println(name);
                 condition.await();
-
-                lock.unlock();
             }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            lock.unlock();
         }
     }
-
-
 }

@@ -16,7 +16,7 @@ public class AccountThread implements Runnable {
 
             synchronized (accountTo.hashCode() > accountFrom.hashCode() ? accountTo : accountFrom) {
                 synchronized (accountFrom.hashCode() >= accountTo.hashCode() ? accountFrom : accountTo) {
-                    if (accountFrom.getCacheBalance() >= accountTo.getCacheBalance()) {
+                    if (accountFrom.getCacheBalance() >= money) {
                         accountFrom.takeOffMoney(money);
                         accountTo.addMoney(money);
                     }
