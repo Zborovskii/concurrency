@@ -19,12 +19,16 @@ public class LegNew implements Runnable {
     public void run() {
 
         try {
-            lock.lock();
             while (true) {
+                lock.lock();
+
                 condition.signal();
                 System.out.println(name);
                 condition.await();
+
+                lock.unlock();
             }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
